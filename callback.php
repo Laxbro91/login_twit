@@ -1,32 +1,46 @@
 <?php
+/**
+ * @file
+ * Take the user when they return from Twitter. Get access tokens.
+ * Verify credentials and redirect to based on response from Twitter.
+ */
 
-	session_start();
-	require('twitteroauth/twitteroauth.php');
-	require('config.php');
+/* Start session and load lib */
+session_start();
+require_once('twitteroauth/twitteroauth.php');
+require_once('config.php');
 
-	if (isset($_REQUEST['oauth_token']) && $_SESSION['oauth_token'] !== $_REQUEST['oauth_token']) 
-	{
-		$_SESSION['status'] = 'old token';
-		header('Locaton: clearsessions.php');
-	}
+/* If the oauth_token is old redirect to the connect page. */
+if (isset($_REQUEST['oauth_token']) && $_SESSION['oauth_token'] !== $_REQUEST['oauth_token']) 
+{
+  $_SESSION['oauth_status'] = 'oldtoken';
+  header('Location: ./clearsessions.php');
+}
 
-	$connection = new TwitterOauth(CONSUMER_KEY, CONSUMER_SECRET, $_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
+/* Create TwitteroAuth object with app key/secret and token key/secret from default phase */
+$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
 
-	$access_token = $connection->getAccesToken($_REQUEST['oauth_verifier']);
+/* Request access tokens from twitter */
+$access_token = $connection->getAccessToken($_REQUEST['oauth_verifier']);
 
-	$_SESSION['access_token'] = $access_token;
+/* Save the access tokens. Normally these would be saved in a database for future use. */
+$_SESSION['access_token'] = $access_token;
 
-	unset($_SESSION['oauth_token']);
-	unset($_SESSION['oauth_token_secret']);
+/* Remove no longer needed request tokens */
+unset($_SESSION['oauth_token']);
+unset($_SESSION['oauth_token_secret']);
 
-	if ($connection->http_code == 200) 
-	{
-		$_SESSION['status'] = 'verified';
-		header('Location: index.php');
-	}
-	else
-	{
-		header('Location: clearsessions.php');
-	}
-
-?>
+/* If HTTP response is 200 continue otherwise send to connect page to retry */
+if (200 == $connection->http_code)
+ {
+  /* The user has been verified and the access tokens can be saved for future use */
+  $_SESSION['status'] = 'verified';
+  //$_SESSION['userID'] = $access_token;
+  header('Location: ./index.php');
+  
+}
+ else 
+{
+  /* Save HTTP status for error dialog on connnect page.*/
+  header('Location: ./clearsessions.php');
+}

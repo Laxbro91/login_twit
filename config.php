@@ -12,8 +12,8 @@ $hostname = "localhost"; //Mysql Hostname
 $db_name = 'db_portaal'; //Database Name
 ###################################################################
 
-define('CONSUMER_KEY', 'PtjlfQmCKhVogu9yZCy1YMEDw');
-define('CONSUMER_SECRET', 'Ca2rXk3Idcve4mmueFia47bW4e562wBkAiAYfgYnpEJSLQwHq6');
-define('OAUTH_CALLBACK', 'http://127.0.0.1/STAGE/portal_git/gertjan/index.php');
+define('CONSUMER_KEY', '4GbpgMsrtxEK7z0QzR04kwr7y');
+define('CONSUMER_SECRET', '4yrb1A8CaiM5gxWFD057xw2IDxqoTvbhVYzybZfXMoPoJni23D');
+define('OAUTH_CALLBACK', 'http://127.0.0.1/STAGE/portal_git/gertjan/callback.php');
 
 ?>

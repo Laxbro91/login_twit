@@ -2,14 +2,34 @@
 
 session_start();
 include_once('classes/googleRegister_include.php'); 
-require('twitteroauth/twitteroauth.php');
-require('config.php');
+include_once('config.php');
 include_once('classes/Db.class.php');
 
 
 if(!isset($_SESSION['userID'])){
 	header('Location: loginscreen.php');
 }
+
+	require('twitteroauth/twitteroauth.php');
+	require('config.php');
+
+if (empty($_SESSION['access_token']) || empty($_SESSION['access_token']['oauth_token']) || empty($_SESSION['access_token']['oauth_token_secret'])) 
+{
+    header('Location: ./clearsessions.php');
+}
+/* Get user access tokens out of the session. */
+$access_token = $_SESSION['access_token'];
+
+/* Create a TwitterOauth object with consumer/user tokens. */
+$connection = new TwitterOAuth('CONSUMER_KEY', 'CONSUMER_SECRET', $access_token['oauth_token'], $access_token['oauth_token_secret']);
+
+/* If method is set change API call made. Test is called by default. */
+$content = $connection->get('account/verify_credentials');
+var_dump($content);
+
+
+
+
 
    /* $connect = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $_SESSION['oauth_token'],
     $_SESSION['oauth_token_secret']);

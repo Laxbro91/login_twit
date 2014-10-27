@@ -3,7 +3,7 @@
 session_start();
 require('twitteroauth/twitteroauth.php');
 require('config.php');
-include_once('classes/Db.class.php');
+
 
 $connection = new TwitterOauth(CONSUMER_KEY, CONSUMER_SECRET);
 
@@ -49,7 +49,6 @@ switch($connection->http_code)
 
 						$db->mysqli->query($sql);*/
 					
-						$_SESSION['test']=$mysql;
 				
 
 
